@@ -7,7 +7,7 @@ menus.forEach((menus) =>
 
 const getLatestNews = async () => {
   const url = new URL(
-    `http://times-node-env.eba-appvq3ef.ap-northeast-2.elasticbeanstalk.com/top-headlines?`
+    `https://sparkling-duckanoo-259e4a.netlify.app/top-headlines?`
   );
   // new URL() 안에 API를 받아오면 알아서 객체로 필요한 요소들을 정리해줌
   const response = await fetch(url);
@@ -20,7 +20,7 @@ const getNewsByCategory = async (event) => {
   const category = event.target.textContent.toLowerCase();
   console.log("category", category);
   const url = new URL(
-    `http://times-node-env.eba-appvq3ef.ap-northeast-2.elasticbeanstalk.com/top-headlines?&category=${category}`
+    `https://sparkling-duckanoo-259e4a.netlify.app/top-headlines?&category=${category}`
   );
   const response = await fetch(url);
   const data = await response.json();
@@ -32,7 +32,7 @@ const getNewsByCategory = async (event) => {
 const getNewsByKeyword = async () => {
   const keyword = document.getElementById("search-input").value;
   const url = new URL(
-    `http://times-node-env.eba-appvq3ef.ap-northeast-2.elasticbeanstalk.com/top-headlines?&q=${keyword}`
+    `https://sparkling-duckanoo-259e4a.netlify.app/top-headlines?&q=${keyword}`
   );
   const response = await fetch(url);
   const data = await response.json();
