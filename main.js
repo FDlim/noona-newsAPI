@@ -1,11 +1,7 @@
 const API_KEY = "3168ee9b3c9d45d6b57b5fb04d1b6f37";
 let newsList = [];
 const menus = document.querySelectorAll(".menus button");
-const sideMenus = document.querySelectorAll(".side-menus button");
 menus.forEach((menus) =>
-  menus.addEventListener("click", (event) => getNewsByCategory(event))
-);
-sideMenus.forEach((menus) =>
   menus.addEventListener("click", (event) => getNewsByCategory(event))
 );
 
@@ -118,4 +114,8 @@ toggle.addEventListener("click", () => {
   exitButton.addEventListener("click", () => {
     document.querySelector(".menu-container").style.display = "none";
   });
+  const sideMenus = document.querySelectorAll(".side-menus button");
+  sideMenus.forEach((menus) =>
+    menus.addEventListener("click", (event) => getNewsByCategory(event))
+  );
 });
