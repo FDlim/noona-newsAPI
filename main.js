@@ -5,41 +5,54 @@ menus.forEach((menus) =>
   menus.addEventListener("click", (event) => getNewsByCategory(event))
 );
 
+let url = new URL(
+  `https://sparkling-duckanoo-259e4a.netlify.app/top-headlines?`
+);
+// let url = new URL(
+//   `https:newsapi.org/v2/top-headlines?country=us&apiKey=3168ee9b3c9d45d6b57b5fb04d1b6f37`
+// );
+
+const gatNews = async () => {
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    if (response.status === 200) {
+      if (data.articles.length === 0) {
+        throw new Error("NO result for this search");
+      }
+      newsList = data.articles;
+      render();
+    } else {
+      throw new Error(data.message);
+    }
+  } catch (error) {
+    errorRender(error.message);
+  }
+};
+
 const getLatestNews = async () => {
-  const url = new URL(
-    `https://sparkling-duckanoo-259e4a.netlify.app/top-headlines?`
-  );
+  url = new URL(`https://sparkling-duckanoo-259e4a.netlify.app/top-headlines?`);
+  // url = new URL(
+  //   `https:newsapi.org/v2/top-headlines?country=us&apiKey=3168ee9b3c9d45d6b57b5fb04d1b6f37`
+  // );
   // new URL() 안에 API를 받아오면 알아서 객체로 필요한 요소들을 정리해줌
-  const response = await fetch(url);
-  const data = await response.json();
-  newsList = data.articles;
-  render();
+  gatNews();
 };
 
 const getNewsByCategory = async (event) => {
   const category = event.target.textContent.toLowerCase();
-  console.log("category", category);
-  const url = new URL(
+  url = new URL(
     `https://sparkling-duckanoo-259e4a.netlify.app/top-headlines?&category=${category}`
   );
-  const response = await fetch(url);
-  const data = await response.json();
-  newsList = data.articles;
-
-  render();
+  gatNews();
 };
 
 const getNewsByKeyword = async () => {
   const keyword = document.getElementById("search-input").value;
-  const url = new URL(
+  url = new URL(
     `https://sparkling-duckanoo-259e4a.netlify.app/top-headlines?&q=${keyword}`
   );
-  const response = await fetch(url);
-  const data = await response.json();
-  newsList = data.articles;
-
-  render();
-  console.log(data);
+  gatNews();
 };
 
 const render = () => {
@@ -65,7 +78,16 @@ const render = () => {
   document.getElementById("news-board").innerHTML = newsHTML;
 };
 
+const errorRender = (errorMessage) => {
+  const errorHTML = `<div class="alert alert-danger" role="alert">
+  ${errorMessage}
+</div>`;
+
+  document.getElementById("news-board").innerHTML = errorHTML;
+};
+
 getLatestNews();
+
 let searchToggleSwitch = false;
 const searchToggle = document.getElementById("search-input-toggle");
 searchToggle.addEventListener("click", () => {
