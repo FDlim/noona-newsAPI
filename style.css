@@ -34,3 +34,61 @@
 .news {
   border-bottom: 2px solid black;
 }
+
+.input-toggle {
+  display: none;
+}
+
+.toggle-tag {
+  display: flex;
+}
+
+.toggle {
+  cursor: pointer;
+}
+
+.side-menu-toggle {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .menus {
+    display: none;
+  }
+  .side-menu-toggle {
+    display: block;
+  }
+}
+
+.menu-container {
+  position: absolute;
+  height: 100%;
+  width: 40%;
+  background-color: rgb(145, 177, 177);
+}
+
+.exit-button {
+  display: flex;
+  justify-content: end;
+}
+
+.side-menus {
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1em;
+}
+
+.side-menus button {
+  display: block;
+  margin-top: 1em;
+
+  border: none;
+  background: none;
+}
+
+.side-menus :hover {
+  border-bottom: 1px solid black;
+}
