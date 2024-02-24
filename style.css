@@ -41,6 +41,7 @@
 
 .toggle-tag {
   display: flex;
+  margin-top: 20px;
 }
 
 .toggle {
@@ -61,7 +62,7 @@
 }
 
 .menu-container {
-  position: absolute;
+  position: fixed;
   height: 100%;
   width: 40%;
   background-color: rgb(145, 177, 177);

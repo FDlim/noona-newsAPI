@@ -2,26 +2,36 @@ const API_KEY = "3168ee9b3c9d45d6b57b5fb04d1b6f37";
 let newsList = [];
 const menus = document.querySelectorAll(".menus button");
 menus.forEach((menus) =>
-  menus.addEventListener("click", (event) => getNewsByCategory(event))
+  menus.addEventListener("click", (menus) => getNewsByCategory(menus))
 );
 
+// let url = new URL(
+//   `https://sparkling-duckanoo-259e4a.netlify.app/top-headlines?`
+// );
 let url = new URL(
   `https://sparkling-duckanoo-259e4a.netlify.app/top-headlines?`
 );
-// let url = new URL(
-//   `https:newsapi.org/v2/top-headlines?country=us&apiKey=3168ee9b3c9d45d6b57b5fb04d1b6f37`
-// );
+let totalResults = 0;
+let page = 1;
+const pageSize = 10;
+const groupSize = 5;
 
 const gatNews = async () => {
   try {
+    url.searchParams.set("page", page); // =>&page=page
+    url.searchParams.set("pageSize", pageSize);
+
     const response = await fetch(url);
+
     const data = await response.json();
     if (response.status === 200) {
       if (data.articles.length === 0) {
         throw new Error("NO result for this search");
       }
       newsList = data.articles;
+      totalResults = data.totalResults;
       render();
+      paginationRender();
     } else {
       throw new Error(data.message);
     }
@@ -31,15 +41,14 @@ const gatNews = async () => {
 };
 
 const getLatestNews = async () => {
+  // url = new URL(`https://sparkling-duckanoo-259e4a.netlify.app/everything?`);
   url = new URL(`https://sparkling-duckanoo-259e4a.netlify.app/top-headlines?`);
-  // url = new URL(
-  //   `https:newsapi.org/v2/top-headlines?country=us&apiKey=3168ee9b3c9d45d6b57b5fb04d1b6f37`
-  // );
   // new URL() 안에 API를 받아오면 알아서 객체로 필요한 요소들을 정리해줌
   gatNews();
 };
 
 const getNewsByCategory = async (event) => {
+  page = 1;
   const category = event.target.textContent.toLowerCase();
   url = new URL(
     `https://sparkling-duckanoo-259e4a.netlify.app/top-headlines?&category=${category}`
@@ -48,6 +57,7 @@ const getNewsByCategory = async (event) => {
 };
 
 const getNewsByKeyword = async () => {
+  page = 1;
   const keyword = document.getElementById("search-input").value;
   url = new URL(
     `https://sparkling-duckanoo-259e4a.netlify.app/top-headlines?&q=${keyword}`
@@ -141,3 +151,62 @@ toggle.addEventListener("click", () => {
     menus.addEventListener("click", (event) => getNewsByCategory(event))
   );
 });
+
+const paginationRender = () => {
+  const totalPages = Math.ceil(totalResults / pageSize);
+  const pageGroup = Math.ceil(page / groupSize);
+  let lastPage = pageGroup * groupSize;
+  if (lastPage > totalPages) {
+    lastPage = totalPages;
+  }
+  const firstPage =
+    lastPage - (groupSize - 1) <= 0 ? 1 : lastPage - (groupSize - 1);
+
+  let paginationHTML = `<li class="page-item" onclick="moveToPage(${1})">
+  <a class="page-link"  aria-label="Previous">
+    <span aria-hidden="true">&laquo;</span>
+  </a>
+</li><li class="page-item" onclick="moveToPage(${
+    page - 1
+  })"><a class="page-link" >Previous</a></li>`;
+  if (page === 1) {
+    paginationHTML = "";
+  }
+
+  for (let i = firstPage; i <= lastPage; i++) {
+    paginationHTML += `<li class="page-item ${
+      i === page ? "active" : ""
+    }" onclick="moveToPage(${i})"><a class="page-link" >${i}</a></li>`;
+  }
+
+  if (page !== totalPages) {
+    paginationHTML += `<li class="page-item" onclick="moveToPage(${
+      page + 1
+    })" > <a class="page-link" " >Next</a></li><li class="page-item" onclick="moveToPage(${totalPages})" >
+    <a class="page-link"  aria-label="Next">
+      <span aria-hidden="true">&raquo;</span>
+    </a>
+  </li>`;
+  }
+
+  document.querySelector(".pagination").innerHTML = paginationHTML;
+
+  //과제 1페이지일경우 프리비우스 버튼 없애기, 마지막 페이지면 넥스트 버튼 없애기
+  //과제 2 >> 버튼 만들어서 가장 마지막 페이지로 이동
+
+  //   <nav aria-label="Page navigation example">
+  //   <ul class="pagination">
+  //     <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+  //     <li class="page-item"><a class="page-link" href="#">1</a></li>
+  //     <li class="page-item"><a class="page-link" href="#">2</a></li>
+  //     <li class="page-item"><a class="page-link" href="#">3</a></li>
+  //     <li class="page-item"><a class="page-link" href="#">Next</a></li>
+  //   </ul>
+  // </nav>
+};
+
+const moveToPage = (pageNum) => {
+  console.log("moveToPage", pageNum);
+  page = pageNum;
+  gatNews();
+};
